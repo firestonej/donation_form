@@ -1,0 +1,28 @@
+# Files produced by bad patch & diff runs
+*~*~
+*.rej
+*.diff
+*.orig
+interdiff*.txt
+*.log
+*.sql
+*.lock
+
+# Local caches.
+.sass-cache
+
+# IDE artifacts
+*~
+\#*\#
+*.swp
+*.swo
+.DS*
+.project
+.idea
+
+# Upstream dependencies.
+vendor
+src/themes/*/.bundle
+src/themes/*/.bundler
+src/themes/*/.sass-cache
+
