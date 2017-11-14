@@ -36,7 +36,6 @@ Class StripeDonation extends ControllerBase {
     \Drupal::logger('donation_form')->notice('Charge URL hit');
 
     $token = $request->get('stripeToken');
-    ksm($request);
 
     if (!$token) {
       throw new \Exception("Required data is missing!");
@@ -48,7 +47,7 @@ Class StripeDonation extends ControllerBase {
       $charge = \Stripe\Charge::create(
         [
           // Convert to cents.
-          "amount" => 1 * 100,
+          "amount" => 100,
           "source" => $token,
           "description" => $this->t('Donation made by @user', ['@user' => $user->getAccountName()]),
           'currency' => 'USD',
@@ -64,7 +63,7 @@ Class StripeDonation extends ControllerBase {
         drupal_set_message($this->t("Thank you. Your payment has been processed."));
       }
       else {
-        drupal_set_message($this->t("Unfortunately your charge failed. @args", ["@args" => $request->getContent(),]));
+        drupal_set_message($this->t("We're sorry, but your payment failed! @args", ["@args" => $request->getContent(),]));
       }
 
       Donation::create();
