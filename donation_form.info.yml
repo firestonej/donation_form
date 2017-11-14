@@ -1,0 +1,6 @@
+name: Donation Form
+type: module
+description: 'A donation form using the Stripe API'
+core: 8.x
+dependencies:
+  - stripe_api
