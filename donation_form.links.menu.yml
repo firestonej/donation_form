@@ -4,3 +4,10 @@ donation_form.donate:
   description: A donation form.
   route_name: donation_form.donate
   weight: 0
+
+# Donation menu items definition
+entity.donation.collection:
+  title: 'Donation History'
+  route_name: entity.donation.collection
+  description: 'List Donation entities'
+  weight: 1
