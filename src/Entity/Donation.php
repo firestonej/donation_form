@@ -54,7 +54,6 @@ class Donation extends ContentEntityBase implements DonationInterface {
 
   use EntityChangedTrait;
 
-
   /**
    * {@inheritdoc}
    */
@@ -69,14 +68,14 @@ class Donation extends ContentEntityBase implements DonationInterface {
    * {@inheritdoc}
    */
   public function getName() {
-    return $this->get('name')->value;
+    return $this->get('payment_email')->value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setName($name) {
-    $this->set('name', $name);
+    $this->set('payment_email', $name);
     return $this;
   }
 
@@ -171,6 +170,7 @@ class Donation extends ContentEntityBase implements DonationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Payment status according to Stripe.
     $fields['payment_status'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Payment Status'))
       ->setDescription(t('The status of the donation payment.'))
@@ -192,6 +192,7 @@ class Donation extends ContentEntityBase implements DonationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Donation amount.
     $fields['payment_amount'] = BaseFieldDefinition::create('float')
       ->setLabel(t('Amount'))
       ->setDescription(t('The amount donated.'))
@@ -211,9 +212,11 @@ class Donation extends ContentEntityBase implements DonationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Will allow future sorting of donations, provides inclusivity of anonymous users, and satisfies the entity's
+    // "name" requirement. (These entities are automatically created, so "name" is pointless.)
     $fields['payment_email'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Email'))
-      ->setDescription(t('The email associated with the payment, since they might not have registered'))
+      ->setDescription(t('The email associated with the payment (for anonymous users)'))
       ->setReadOnly(TRUE)
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
@@ -228,6 +231,7 @@ class Donation extends ContentEntityBase implements DonationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Include the raw JSON. Unwise in production environments; should be sanitized into fields or encrypted.
     $fields['data'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Data'))
       ->setDescription(t('Raw payment data from Stripe'))

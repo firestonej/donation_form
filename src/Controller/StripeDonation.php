@@ -20,21 +20,19 @@ Class StripeDonation extends ControllerBase {
    * Constructor.
    */
   public function __construct() {
-//    $this->config = $config_factory->get('donation_form.settings');
-
+    // @todo: Load key from settings
     Stripe::setApiKey('sk_test_etUyAYyUHhjZgKUwo0UF3TrX');
   }
 
   /**
    * Makes a Charge call to the Stripe API.
    *
-   *
    * @return String
    *   Returns status message.
    */
   public function donate(Request $request) {
-    \Drupal::logger('donation_form')->notice('Charge URL hit');
 
+    // Checkout.js request passed to our handler.
     $token = $request->get('stripeToken');
 
     if (!$token) {
@@ -57,6 +55,7 @@ Class StripeDonation extends ControllerBase {
         ]
       );
 
+      // Prep entity for logging.
       $donation_data = [
         'uid' => $user->id(),
         'payment_status' => $charge->status,
@@ -68,15 +67,24 @@ Class StripeDonation extends ControllerBase {
           ])
       ];
 
-      if ($charge->paid === TRUE) {
-        drupal_set_message($this->t("Thank you. Your payment has been processed."));
-      }
-      else {
-        drupal_set_message($this->t("We're sorry, but your payment failed! @args", ["@args" => $request->getContent(),]));
-      }
-
       $donation = Donation::create($donation_data);
       $donation->save();
+
+      // Inform the user and watchdog of donation status.
+      if ($charge->paid === TRUE) {
+        drupal_set_message($this->t("Thank you. Your payment has been processed."));
+        \Drupal::logger('donation_form')->notice('New donation made by @user for @amount', [
+          '@user' => $user->getAccountName(),
+          '@amount' => $charge->amount
+        ]);
+      }
+      else {
+        drupal_set_message($this->t("We're sorry, but your payment failed! @args", ["@args" => $request->getContent()]));
+        \Drupal::logger('donation_form')->notice('Donation attempt by @user FAILED! <br/> @failure', [
+          '@user' => $user->getAccountName(),
+          '@failure' => $charge->failure_message
+        ]);
+      }
 
       return $this->redirect('donation_form.donate');
     }
@@ -89,9 +97,9 @@ Class StripeDonation extends ControllerBase {
         '@error' => $e->getMessage(),
       ]);
 
+      // @todo: More graceful handling, inform user of what to do next, etc.
       drupal_set_message($this->t("Payment failed."), 'error');
-
-      return new Response(NULL, Response::HTTP_FORBIDDEN);
+      return $this->redirect('donation_form.donate');
     }
   }
 }
