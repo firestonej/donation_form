@@ -1,0 +1,14 @@
+  <form action="{{ action }}" method="POST">
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="{{ data.key }}"
+      data-amount="{{ data.amount }}"
+      data-name="{{ data.name }}"
+      data-description="{{ data.description }}"
+      data-image="{{ data.image }}"
+      data-zip-code="{{ data.zip_code }}"
+      data-locale="{{ data.locale }}"
+      data-email="{{ data.email }}"
+      data-label="{{ data.label }}">
+    </script>
+  </form>

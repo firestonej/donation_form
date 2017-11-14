@@ -1,0 +1,16 @@
+donation_form.donate:
+  path: 'donate'
+  defaults:
+    _controller:  '\Drupal\donation_form\Controller\DonatePage::description'
+    _title: 'Donate'
+  requirements:
+    _permission: 'access content'
+
+donation_form.stripe_donation:
+  path: '/donation/charge'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\donation_form\Controller\StripeDonation::donate'
+    _title: 'Donate'
+  requirements:
+    _permission: 'access content'

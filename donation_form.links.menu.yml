@@ -1,0 +1,6 @@
+
+donation_form.donate:
+  title: Donate
+  description: A donation form.
+  route_name: donation_form.donate
+  weight: 0
