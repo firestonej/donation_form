@@ -1,4 +1,21 @@
 {
+    "name": "firestonej/donation_form",
+    "description": "Simple D8 proof of concept to allow donations through the Stripe PHP API.",
+    "type": "drupal-module",
+    "homepage": "https://github.com/firestonej/donation_form",
+    "authors": [
+        {
+            "name": "Jesse Firestone",
+            "homepage": "https://github.com/firestonej",
+            "role": "Creator"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/firestonej/donation_form/issues",
+        "source": "https://github.com/firestonej/donation_form"
+    },
+    "license": "GPL-2.0+",
+    "minimum-stability": "dev",
     "require": {
         "stripe/stripe-php": "^5.6"
     }
