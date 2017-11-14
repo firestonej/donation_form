@@ -57,7 +57,16 @@ Class StripeDonation extends ControllerBase {
         ]
       );
 
-      ksm($charge);
+      $donation_data = [
+        'uid' => $user->id(),
+        'payment_status' => $charge->status,
+        'payment_amount' => $charge->amount,
+        'payment_email' => $charge->source->name,
+        'data' => Json::encode([
+          'charge' => $charge,
+          'request' => $request
+          ])
+      ];
 
       if ($charge->paid === TRUE) {
         drupal_set_message($this->t("Thank you. Your payment has been processed."));
@@ -66,7 +75,8 @@ Class StripeDonation extends ControllerBase {
         drupal_set_message($this->t("We're sorry, but your payment failed! @args", ["@args" => $request->getContent(),]));
       }
 
-      Donation::create();
+      $donation = Donation::create($donation_data);
+      $donation->save();
 
       return $this->redirect('donation_form.donate');
     }
